@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <script src="d3.v2.js"></script>
+</head>
+
+<body>
+
+	<svg>
+	</svg>
+
+	<script>
+
+
+
+data = [ {'position': [0,0]},
+          {'position': [0,1]},
+          {'position': [1,0]},
+          {'position': [1,1]},
+          {'position': [0,2]},
+          {'position': [1,2]},
+          {'position': [1,3]},
+       ]
+        
+edge_data = [[0,1], [0,2],[1,3],[2,3],[2,4]]
+  
+var canvas_size = 400;
+var margin = 40
+
+var dot_max = d3.max(data, function(d) {return Math.max(d.position[0],
+                                                       d.position[1])});
+var dot_min = d3.min(data, function(d) {return Math.min(d.position[0],
+                                                       d.position[1])});
+
+var dot_scale = d3.scale.linear()
+          .domain([dot_min, dot_max])
+          .range([margin, canvas_size - margin])
+
+function get_position(a) {return margin + dot_scale(a)}
+  
+var svg = d3.select("svg");
+
+edges = svg.selectAll("line")
+  .data(edge_data)
+  .enter()
+  .append("line")
+  
+  
+  edges.attr('x1', function(d) {return get_position(data[d[0]]['position'][0])})
+  .attr('y1', function(d) {return get_position(data[d[0]]['position'][1])})
+  .attr('x2', function(d) {return get_position(data[d[1]]['position'][1])})
+  .attr('y2', function(d) {return get_position(data[d[1]]['position'][0])})
+  .style("stroke-width", 40)
+  .style("stroke", "steelblue")
+  .style("fill", "none");
+  
+dots = svg.selectAll("circle")
+  .data(data)
+  .enter()
+  .append("circle")
+  
+  dots.attr('cy', function(d){ return get_position(d['position'][0])})
+  .attr('cx', function(d){ return  get_position(d['position'][1])})
+  .attr('r', 20)
+  .attr('fill', 'black');
+      
+
+	</script>
+</body>
+</html>
