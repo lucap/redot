@@ -16,15 +16,26 @@
 
 data = [ {'position': [0,0]},
           {'position': [0,1]},
-          {'position': [1,0]},
-          {'position': [1,1]},
-          {'position': [0,2]},
-          {'position': [1,2]},
-          {'position': [1,3]},
+          {'position': [1,0]}, 
+          //{'position': [0,2]}, 
+          {'position': [1,1]}, 
+          
+          //{'position': [1,2]},
+          //{'position': [1,3]},
        ]
-        
-edge_data = [[0,1], [0,2],[1,3],[2,3],[2,4]]
-  
+         
+edge_data = [[0,1],[0,2],[1,3],[2,3],]// [2,4]]//[[0,1], [0,2],[1,3],[2,3],[2,4]]
+
+for(var i in data){
+  data[i]['edge_count'] = 0; 
+}
+
+for (var i in edge_data){
+  for (var j in edge_data[i]) {
+      data[edge_data[i][j]]['edge_count'] += 1; 
+  }
+}
+
 var canvas_size = 400;
 var margin = 40
 
@@ -67,7 +78,7 @@ edges = svg.selectAll("line")
   .style("stroke-width", 40)
   .style("stroke", "steelblue")
   .style("fill", "none")
-  .on("click", function(d,i) { fade_out(this); console.log(i)})
+  .on("click", function(d,i) { strike(this, i);})
   
 dots = svg.selectAll("circle")
   .data(data)
@@ -79,11 +90,29 @@ dots = svg.selectAll("circle")
   .attr('r', 20)
   .attr('fill', 'black');
 
-fade_out(svg.selectAll("line")[0][2])
-fade_out(svg.selectAll("line")[0][3])
-change_color(svg.selectAll("circle")[0][6], 'red')
-change_color(svg.selectAll("circle")[0][3], 'orange')
-change_color(svg.selectAll("circle")[0][4], 'green')
+function strike(element, index) {
+  fade_out(element); 
+    for (var i in edge_data[index]) {
+        console.log(data[edge_data[index][i]]);
+      data[edge_data[index][i]]['edge_count'] -= 1;
+        if (data[edge_data[index][i]]['edge_count'] <= 0) {
+          p = edge_data[index][i];
+            console.log(p);
+            change_cicle(p, 'red');
+        }       
+    }
+}
+
+function change_cicle(index, color){
+  change_color(svg.selectAll("circle")[0][index], color)
+}
+
+//fade_out(svg.selectAll("line")[0][2])
+//fade_out(svg.selectAll("line")[0][3])
+//change_color(svg.selectAll("circle")[0][6], 'red')
+//change_color(svg.selectAll("circle")[0][3], 'orange')
+//change_color(svg.selectAll("circle")[0][4], 'green') 
+change_cicle(0,'green');
       
 
 	</script>
